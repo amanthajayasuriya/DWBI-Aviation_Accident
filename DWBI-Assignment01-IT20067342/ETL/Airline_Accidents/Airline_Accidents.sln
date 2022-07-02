@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1831
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Airline_Accidents", "Airline_Accidents\Airline_Accidents.dtproj", "{9882F55A-170B-40AB-8FAA-A4FA4063326F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9882F55A-170B-40AB-8FAA-A4FA4063326F}.Development|Default.ActiveCfg = Development
+		{9882F55A-170B-40AB-8FAA-A4FA4063326F}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE053D5A-286E-4164-98F5-5BD7B032D49B}
+	EndGlobalSection
+EndGlobal

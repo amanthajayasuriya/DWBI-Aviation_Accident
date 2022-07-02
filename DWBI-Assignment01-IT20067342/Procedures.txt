@@ -1,0 +1,160 @@
+CREATE PROCEDURE dbo.UpdateReport
+@ReportID int,
+@ReportStatus nvarchar(50),
+@Weather_Condition nvarchar(50),
+@Broad_phase_of_flight nvarchar(10),
+@Injury_Severity nvarchar(10),
+@Location nvarchar(20),
+@Investigation_Type nvarchar(20),
+@ModifiedDate datetime
+AS 
+BEGIN
+if not exists (select ReportSK
+from dbo.DimReport
+where AlternateReportID = @ReportID) 
+BEGIN
+insert into dbo.DimReport
+(AlternateReportID, Report_Status, Weather_Condition,  Broad_phase_of_flight,Injury_Severity,Location,Investigation_Type,SrcPublication_Date, InsertDate, ModifiedDate)
+values
+(@ReportID, @ReportStatus, @Weather_Condition,@Broad_phase_of_flight, @Injury_Severity,@Location ,@Investigation_Type,@ModifiedDate,GETDATE(), GETDATE()) 
+END;
+if exists (select ReportSK
+from dbo.DimReport
+where AlternateReportID = @ReportID) 
+BEGIN
+update dbo.DimReport
+set Report_Status = @ReportStatus, Weather_Condition=@Weather_Condition,Broad_phase_of_flight=@Broad_phase_of_flight, Injury_Severity=@Injury_Severity,Location=@Location,Investigation_Type=@Investigation_Type,SrcPublication_Date=@ModifiedDate,
+ModifiedDate = GETDATE()
+where AlternateReportID = @ReportID
+END;
+END;
+
+============================================================================================================
+CREATE PROCEDURE dbo.UpdateAirport
+@AirportID int,
+@AirportCode nvarchar(50),
+@AirportName nvarchar(50)
+
+AS 
+BEGIN
+if not exists (select AirportSK	
+from dbo.DimAirport
+where AlternateAirportID  = @AirportID) 
+BEGIN
+insert into dbo.DimAirport
+(AlternateAirportID, Airport_Code , Airport_Name , InsertDate, ModifiedDate)
+values
+(@AirportID, @AirportCode, @AirportName,GETDATE(), GETDATE()) 
+END;
+if exists (select AirportSK
+from dbo.DimAirport
+where AlternateAirportID  = @AirportID) 
+BEGIN
+update dbo.DimAirport
+set Airport_Code = @AirportCode, Airport_Name=@AirportName,
+ModifiedDate = GETDATE()
+where AlternateAirportID  = @AirportID
+END;
+END;
+
+
+=====================================================================================================
+CREATE PROCEDURE dbo.UpdateAircraft
+@AircraftID int,
+@AircraftCategory  nvarchar(50),
+@EngineType  nvarchar(50),
+@Registration_Number  nvarchar(50),
+@NumberOfEngines int,
+@Make nvarchar(50),
+@Model nvarchar(50),
+@Aircraft_damage nvarchar(50)
+
+AS 
+BEGIN
+if not exists (select AircraftSK	
+from dbo.DimAircraft
+where AlternateAircraftID = @AircraftID) 
+BEGIN
+insert into dbo.DimAircraft
+(AlternateAircraftID , Aircraft_Category,Engine_Type,Registration_Number ,NumberOfEngines,Make ,Model ,Aircraft_damage ,InsertDate, ModifiedDate)
+values
+(@AircraftID, @AircraftCategory, @EngineType,@Registration_Number,@NumberOfEngines,@Make,@Model,@Aircraft_damage,GETDATE(), GETDATE()) 
+END;
+if exists (select AircraftSK
+from dbo.DimAircraft
+where AlternateAircraftID   = @AircraftID) 
+BEGIN
+update dbo.DimAircraft
+set Aircraft_Category = @AircraftCategory, Engine_Type=@EngineType,Registration_Number =@Registration_Number,NumberOfEngines=@NumberOfEngines,Make =@Make,Model =@Model, Aircraft_damage =@Aircraft_damage,
+ModifiedDate = GETDATE()
+where AlternateAircraftID  = @AircraftID
+END;
+END;
+=======================================================================================================
+
+
+CREATE PROCEDURE dbo.UpdateFlight
+@FlightID int,
+@AircraftKey int,
+@Schedule   nvarchar(50),
+@Purpose#of#flight  nvarchar(50)
+
+AS 
+BEGIN
+if not exists (select FlightSK	
+from dbo.DimFlight
+where AlternateFlightID   = @FlightID) 
+BEGIN
+insert into dbo.DimFlight
+(AlternateFlightID  , AircraftKey ,Schedule ,Purpose#of#flight  ,InsertDate, ModifiedDate)
+values
+(@FlightID, @AircraftKey, @Schedule,@Purpose#of#flight,GETDATE(), GETDATE()) 
+END;
+if exists (select FlightSK
+from dbo.DimFlight
+where AlternateFlightID = @FlightID) 
+BEGIN
+update dbo.DimFlight
+set AircraftKey = @AircraftKey, Schedule=@Schedule,Purpose#of#flight  =@Purpose#of#flight,
+ModifiedDate = GETDATE()
+where AlternateFlightID   = @FlightID
+END;
+END;
+
+=========================================================================
+USE [Airline_Accidents_DW]
+GO
+/****** Object:  StoredProcedure [dbo].[UpdateFactAccident]    Script Date: 5/10/2022 8:33:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[UpdateFactAccident]
+@AccidentID int,
+@accm_txn_complete_time datetime,
+@txn_process_time_hours int
+AS
+BEGIN
+if not exists (select AccidentID
+from dbo.FactAccident
+where AccidentID = @AccidentID)
+BEGIN
+insert into dbo.FactAccident
+(AccidentID,accm_txn_complete_time,txn_process_time_hours)
+values
+(@AccidentID,
+@accm_txn_complete_time,
+@txn_process_time_hours)
+END;
+if exists (select AccidentID
+from dbo.FactAccident
+where AccidentID = @AccidentID)
+BEGIN
+update dbo.FactAccident
+set
+accm_txn_complete_time=@accm_txn_complete_time,
+txn_process_time_hours=@txn_process_time_hours
+where AccidentID = @AccidentID
+END;
+END;
+

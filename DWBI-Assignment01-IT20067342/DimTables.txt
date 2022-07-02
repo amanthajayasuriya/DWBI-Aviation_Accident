@@ -1,0 +1,73 @@
+create table DimReport
+(
+	ReportSK	int identity(1,1) primary key,
+	AlternateReportID int,
+	Report_Status nvarchar(50),
+	Weather_Condition nvarchar(50),
+	Broad_phase_of_flight nvarchar(10),
+	Injury_Severity nvarchar(10),
+	Location nvarchar(20),
+	Investigation_Type nvarchar(20),
+	SrcPublication_Date Date,
+	StartDate DateTime,
+	Enddate DateTime,
+	InsertDate	DateTime,
+	ModifiedDate	DateTime
+)
+
+
+create table DimAirport
+(
+	AirportSK	int identity(1,1) primary key,
+	AlternateAirportID int,
+	Airport_Code nvarchar(50),
+	Airport_Name nvarchar(50),
+	InsertDate	DateTime,
+	ModifiedDate	DateTime
+)
+
+
+create table DimAircraft
+(
+	AircraftSK	int identity(1,1) primary key,
+	AlternateAircraftID int,
+	Aircraft_Category nvarchar(50),
+	Engine_Type nvarchar(50),
+	Registration_Number nvarchar(50),
+	NumberOfEngines int,
+	Make nvarchar(50),
+	Model nvarchar(50),
+	Aircraft_damage nvarchar(50),
+	InsertDate	DateTime,
+	ModifiedDate	DateTime
+)
+
+create table DimFlight
+(
+	FlightSK	int identity(1,1) primary key,
+	AlternateFlightID int,
+	AircraftKey int foreign key references DimAircraft(AircraftSK),
+	Schedule nvarchar(50),
+	Purpose#of#flight nvarchar(50),
+	InsertDate	DateTime,
+	ModifiedDate	DateTime
+)
+
+create table FactAccident(
+	AccidentID	int,
+	EventDateKey int foreign key references DimDate(DateKey),
+	AirportIDKey int foreign key references DimAirport(AirportSK),
+	AircraftIDKey int foreign key references DimAircraft(AircraftSK),
+	ReportIDKey int foreign key references DimReport(ReportSK),
+	Event_ID nvarchar(50),
+	Accident_Number nvarchar(50),
+	Total_Fatal_Injuries int,
+	Total_Serious_Injuries int,
+	Total_Minor_Injuries int,
+	Total_Uninjured int,
+	damage_Price float,
+	Milage float,
+	InsertDate datetime,
+	ModifiedDate datetime
+)
+

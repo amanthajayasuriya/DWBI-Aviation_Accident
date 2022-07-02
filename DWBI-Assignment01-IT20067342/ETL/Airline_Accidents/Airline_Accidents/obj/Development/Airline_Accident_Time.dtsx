@@ -1,0 +1,2578 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/10/2022 7:56:20 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="MSI"
+  DTS:CreatorName="MSI\user"
+  DTS:DTSID="{14AE1AB7-E303-43D0-B187-48249ED0A0B7}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.170"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Airline_Accident_Time"
+  DTS:PackageType="5"
+  DTS:VersionBuild="21"
+  DTS:VersionGUID="{1AB79909-5352-491D-A466-CF4E4C01BF4C}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{22B4F5EB-DFA6-47DF-8A5E-8898016F7BC4}"
+      DTS:ObjectName="MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=MSI\MSSQLSERVER_DWBI;Initial Catalog=Airline_Accidents_DW;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{8B41359D-CEC4-4B04-A98B-E7509A7578E5}"
+      DTS:ObjectName="MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=MSI\MSSQLSERVER_DWBI;Initial Catalog=Airline_Accident_Staging;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Extract Time data to Staging"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{DA11BC1F-1B8F-45CB-9FC8-B316D39AFB2E}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Extract Time data to Staging"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\Extract Time data to Staging.EventHandlers[OnPreExecute]"
+          DTS:CreationName="OnPreExecute"
+          DTS:DTSID="{3E13DD5D-6D3C-48D8-AB3E-4B1DF2593D11}"
+          DTS:EventID="-649129823"
+          DTS:EventName="OnPreExecute"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{B9006C5D-8156-42C3-AD17-FA1E4044621C}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">-1</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Extract Time data to Staging.EventHandlers[OnPreExecute]\Truncate Time"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{2F974F6A-343B-4E7A-BC6F-0BCFBD68F64B}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Truncate Time"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{8B41359D-CEC4-4B04-A98B-E7509A7578E5}"
+                  SQLTask:SqlStatementSource="truncate table [Airline_Accident_Staging].[dbo].[StgTime]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Extract Time data to Staging\Flat File Source"
+              componentClassID="Microsoft.FlatFileSource"
+              contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Flat File Source"
+              localeId="1033"
+              name="Flat File Source"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether zero-length columns are treated as null."
+                  name="RetainNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of an output column containing the file name. If no name is specified, no output column containing the file name will be generated."
+                  name="FileNameColumnName"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Extract Time data to Staging\Flat File Source.Connections[FlatFileConnection]"
+                  connectionManagerID="{06A1B2A4-E2CA-4926-A8DF-95AA1EDCC9D0}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[Flat File Connection Manager]"
+                  name="FlatFileConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output]"
+                  name="Flat File Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[fact_table_natural_key (txn_id) ]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[fact_table_natural_key (txn_id) ]"
+                      name="fact_table_natural_key (txn_id) "
+                      precision="18"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[accm_txn_complete_time]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[accm_txn_complete_time]"
+                      length="50"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="fact_table_natural_key (txn_id) " />
+                    <externalMetadataColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[accm_txn_complete_time]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="accm_txn_complete_time" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output]"
+                  isErrorOut="true"
+                  name="Flat File Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      codePage="1252"
+                      dataType="text"
+                      description="Flat File Source Error Output Column"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      name="Flat File Source Error Output Column" />
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Extract Time data to Staging\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[StgTime]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Extract Time data to Staging\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[fact_table_natural_key (txn_id) ]"
+                      cachedDataType="numeric"
+                      cachedName="fact_table_natural_key (txn_id) "
+                      cachedPrecision="18"
+                      externalMetadataColumnId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[fact_table_natural_key (txn_id) ]" />
+                    <inputColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[accm_txn_complete_time]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="accm_txn_complete_time"
+                      externalMetadataColumnId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[accm_txn_complete_time]"
+                      lineageId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output].Columns[accm_txn_complete_time]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      dataType="i4"
+                      name="fact_table_natural_key (txn_id) " />
+                    <externalMetadataColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      name="accm_txn_complete_time" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Extract Time data to Staging\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Extract Time data to Staging\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Extract Time data to Staging\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Extract Time data to Staging\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Extract Time data to Staging.Paths[Flat File Source Output]"
+              endId="Package\Extract Time data to Staging\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="Flat File Source Output"
+              startId="Package\Extract Time data to Staging\Flat File Source.Outputs[Flat File Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transform And Load Data"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{E56E2D7E-0D73-4CDF-B7D0-D93406298500}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transform And Load Data"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transform And Load Data\Derived Column"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derived Column"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input].Columns[accm_txn_complete_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_complete_time"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_complete_time]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input].Columns[accm_txn_create_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_create_time"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_create_time]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Output].Columns[txn_process_time_hours]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Output].Columns[txn_process_time_hours]"
+                      name="txn_process_time_hours"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[DATEDIFF]("hh",#{Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_create_time]},#{Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_complete_time]})</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">DATEDIFF("hh",accm_txn_create_time,accm_txn_complete_time)</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\Extract from factAccident"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Extract from factAccident"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[FactAccident]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transform And Load Data\Extract from factAccident.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AccidentID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AccidentID]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AccidentID]"
+                      name="AccidentID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[EventDateKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[EventDateKey]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[EventDateKey]"
+                      name="EventDateKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AirportIDKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AirportIDKey]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AirportIDKey]"
+                      name="AirportIDKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AircraftIDKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AircraftIDKey]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AircraftIDKey]"
+                      name="AircraftIDKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ReportIDKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[ReportIDKey]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ReportIDKey]"
+                      name="ReportIDKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Event_ID]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Event_ID]"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Event_ID]"
+                      name="Event_ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Accident_Number]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Accident_Number]"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Accident_Number]"
+                      name="Accident_Number"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Fatal_Injuries]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Fatal_Injuries]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Fatal_Injuries]"
+                      name="Total_Fatal_Injuries"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Serious_Injuries]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Serious_Injuries]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Serious_Injuries]"
+                      name="Total_Serious_Injuries"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Minor_Injuries]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Minor_Injuries]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Minor_Injuries]"
+                      name="Total_Minor_Injuries"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Uninjured]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Uninjured]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Uninjured]"
+                      name="Total_Uninjured"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[damage_Price]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[damage_Price]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[damage_Price]"
+                      name="damage_Price"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Milage]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Milage]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Milage]"
+                      name="Milage"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[InsertDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[InsertDate]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[InsertDate]"
+                      name="InsertDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ModifiedDate]"
+                      name="ModifiedDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_create_time]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_create_time]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_create_time]"
+                      name="accm_txn_create_time"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_complete_time]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[txn_process_time_hours]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[txn_process_time_hours]"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[txn_process_time_hours]"
+                      name="txn_process_time_hours"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AccidentID]"
+                      dataType="i4"
+                      name="AccidentID" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[EventDateKey]"
+                      dataType="i4"
+                      name="EventDateKey" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AirportIDKey]"
+                      dataType="i4"
+                      name="AirportIDKey" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[AircraftIDKey]"
+                      dataType="i4"
+                      name="AircraftIDKey" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[ReportIDKey]"
+                      dataType="i4"
+                      name="ReportIDKey" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Event_ID]"
+                      dataType="wstr"
+                      length="50"
+                      name="Event_ID" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Accident_Number]"
+                      dataType="wstr"
+                      length="50"
+                      name="Accident_Number" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Fatal_Injuries]"
+                      dataType="i4"
+                      name="Total_Fatal_Injuries" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Serious_Injuries]"
+                      dataType="i4"
+                      name="Total_Serious_Injuries" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Minor_Injuries]"
+                      dataType="i4"
+                      name="Total_Minor_Injuries" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Total_Uninjured]"
+                      dataType="i4"
+                      name="Total_Uninjured" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[damage_Price]"
+                      dataType="r8"
+                      name="damage_Price" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[Milage]"
+                      dataType="r8"
+                      name="Milage" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[InsertDate]"
+                      dataType="dbTimeStamp"
+                      name="InsertDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[ModifiedDate]"
+                      dataType="dbTimeStamp"
+                      name="ModifiedDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_create_time]"
+                      dataType="dbTimeStamp"
+                      name="accm_txn_create_time" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      name="accm_txn_complete_time" />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].ExternalColumns[txn_process_time_hours]"
+                      dataType="i4"
+                      name="txn_process_time_hours" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AccidentID]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AccidentID]"
+                      name="AccidentID" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[EventDateKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[EventDateKey]"
+                      name="EventDateKey" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AirportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AirportIDKey]"
+                      name="AirportIDKey" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AircraftIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[AircraftIDKey]"
+                      name="AircraftIDKey" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ReportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ReportIDKey]"
+                      name="ReportIDKey" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Event_ID]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Event_ID]"
+                      name="Event_ID" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Accident_Number]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Accident_Number]"
+                      name="Accident_Number" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Fatal_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Fatal_Injuries]"
+                      name="Total_Fatal_Injuries" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Serious_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Serious_Injuries]"
+                      name="Total_Serious_Injuries" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Minor_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Minor_Injuries]"
+                      name="Total_Minor_Injuries" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Uninjured]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Total_Uninjured]"
+                      name="Total_Uninjured" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[damage_Price]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[damage_Price]"
+                      name="damage_Price" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Milage]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[Milage]"
+                      name="Milage" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[InsertDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[InsertDate]"
+                      name="InsertDate" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ModifiedDate]"
+                      name="ModifiedDate" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[accm_txn_create_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[accm_txn_create_time]"
+                      name="accm_txn_create_time" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[txn_process_time_hours]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[txn_process_time_hours]"
+                      name="txn_process_time_hours" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\Extract from Time"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Extract from Time"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[StgTime]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transform And Load Data\Extract from Time.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accident_Staging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[fact_table_natural_key (txn_id) ]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[fact_table_natural_key (txn_id) ]"
+                      name="fact_table_natural_key (txn_id) "
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_complete_time]"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].ExternalColumns[fact_table_natural_key (txn_id) ]"
+                      dataType="i4"
+                      name="fact_table_natural_key (txn_id) " />
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].ExternalColumns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      name="accm_txn_complete_time" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[fact_table_natural_key (txn_id) ]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[fact_table_natural_key (txn_id) ]"
+                      name="fact_table_natural_key (txn_id) " />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\FactAccident Sort"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+              name="FactAccident Sort"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the maximum number of threads to use for sorting."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input]"
+                  name="Sort Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[AccidentID]"
+                      cachedDataType="i4"
+                      cachedName="AccidentID"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AccidentID]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[EventDateKey]"
+                      cachedDataType="i4"
+                      cachedName="EventDateKey"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[EventDateKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[AirportIDKey]"
+                      cachedDataType="i4"
+                      cachedName="AirportIDKey"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AirportIDKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[AircraftIDKey]"
+                      cachedDataType="i4"
+                      cachedName="AircraftIDKey"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AircraftIDKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[ReportIDKey]"
+                      cachedDataType="i4"
+                      cachedName="ReportIDKey"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ReportIDKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Event_ID]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Event_ID"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Event_ID]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Accident_Number]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Accident_Number"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Accident_Number]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Total_Fatal_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Fatal_Injuries"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Fatal_Injuries]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Total_Serious_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Serious_Injuries"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Serious_Injuries]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Total_Minor_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Minor_Injuries"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Minor_Injuries]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Total_Uninjured]"
+                      cachedDataType="i4"
+                      cachedName="Total_Uninjured"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Uninjured]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[damage_Price]"
+                      cachedDataType="r8"
+                      cachedName="damage_Price"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[damage_Price]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[Milage]"
+                      cachedDataType="r8"
+                      cachedName="Milage"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Milage]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[InsertDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="InsertDate"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[InsertDate]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[ModifiedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ModifiedDate"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ModifiedDate]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[accm_txn_create_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_create_time"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_create_time]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[accm_txn_complete_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_complete_time"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input].Columns[txn_process_time_hours]"
+                      cachedDataType="i4"
+                      cachedName="txn_process_time_hours"
+                      lineageId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[txn_process_time_hours]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output]"
+                  isSorted="true"
+                  name="Sort Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AccidentID]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AccidentID]"
+                      name="AccidentID"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AccidentID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[EventDateKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[EventDateKey]"
+                      name="EventDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[EventDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AirportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AirportIDKey]"
+                      name="AirportIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AirportIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AircraftIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AircraftIDKey]"
+                      name="AircraftIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[AircraftIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ReportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ReportIDKey]"
+                      name="ReportIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ReportIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Event_ID]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Event_ID]"
+                      name="Event_ID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Event_ID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Accident_Number]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Accident_Number]"
+                      name="Accident_Number">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Accident_Number]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Fatal_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Fatal_Injuries]"
+                      name="Total_Fatal_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Fatal_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Serious_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Serious_Injuries]"
+                      name="Total_Serious_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Serious_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Minor_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Minor_Injuries]"
+                      name="Total_Minor_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Minor_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Uninjured]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Uninjured]"
+                      name="Total_Uninjured">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Total_Uninjured]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[damage_Price]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[damage_Price]"
+                      name="damage_Price">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[damage_Price]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Milage]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Milage]"
+                      name="Milage">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[Milage]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[InsertDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[InsertDate]"
+                      name="InsertDate">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[InsertDate]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ModifiedDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ModifiedDate]"
+                      name="ModifiedDate">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[ModifiedDate]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[accm_txn_create_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[accm_txn_create_time]"
+                      name="accm_txn_create_time">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_create_time]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[txn_process_time_hours]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[txn_process_time_hours]"
+                      name="txn_process_time_hours">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output].Columns[txn_process_time_hours]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\Merge Join"
+              componentClassID="Microsoft.MergeJoin"
+              contactInfo="Merge Join;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Combine two sorted data flows into one using the FULL, LEFT, or INNER join. We recommend this transformation when data flows can be sorted at their sources."
+              name="Merge Join"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of join to perform."
+                  name="JoinType"
+                  typeConverter="JoinType">2</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of columns in the ordering key."
+                  name="NumKeyColumns">1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the null values are treated as equal values."
+                  name="TreatNullsAsEqual">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Indicates the requested maximum buffers per input before blocking."
+                  name="MaxBuffersPerInput">5</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Left Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input].Columns[fact_table_natural_key (txn_id) ]"
+                      cachedDataType="i4"
+                      cachedName="fact_table_natural_key (txn_id) "
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[fact_table_natural_key (txn_id) ]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input].Columns[accm_txn_complete_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_complete_time"
+                      lineageId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[accm_txn_complete_time]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Right Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[AccidentID]"
+                      cachedDataType="i4"
+                      cachedName="AccidentID"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AccidentID]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[EventDateKey]"
+                      cachedDataType="i4"
+                      cachedName="EventDateKey"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[EventDateKey]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[AirportIDKey]"
+                      cachedDataType="i4"
+                      cachedName="AirportIDKey"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AirportIDKey]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[AircraftIDKey]"
+                      cachedDataType="i4"
+                      cachedName="AircraftIDKey"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[AircraftIDKey]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[ReportIDKey]"
+                      cachedDataType="i4"
+                      cachedName="ReportIDKey"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ReportIDKey]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Event_ID]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Event_ID"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Event_ID]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Accident_Number]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Accident_Number"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Accident_Number]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Fatal_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Fatal_Injuries"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Fatal_Injuries]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Serious_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Serious_Injuries"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Serious_Injuries]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Minor_Injuries]"
+                      cachedDataType="i4"
+                      cachedName="Total_Minor_Injuries"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Minor_Injuries]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Uninjured]"
+                      cachedDataType="i4"
+                      cachedName="Total_Uninjured"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Total_Uninjured]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[damage_Price]"
+                      cachedDataType="r8"
+                      cachedName="damage_Price"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[damage_Price]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Milage]"
+                      cachedDataType="r8"
+                      cachedName="Milage"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[Milage]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[InsertDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="InsertDate"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[InsertDate]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[ModifiedDate]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="ModifiedDate"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[ModifiedDate]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[accm_txn_create_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_create_time"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[accm_txn_create_time]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[txn_process_time_hours]"
+                      cachedDataType="i4"
+                      cachedName="txn_process_time_hours"
+                      lineageId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output].Columns[txn_process_time_hours]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output]"
+                  isSorted="true"
+                  name="Merge Join Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[fact_table_natural_key (txn_id)]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[fact_table_natural_key (txn_id)]"
+                      name="fact_table_natural_key (txn_id)"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input].Columns[fact_table_natural_key (txn_id) ]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input].Columns[accm_txn_complete_time]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[EventDateKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[EventDateKey]"
+                      name="EventDateKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[EventDateKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[AirportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[AirportIDKey]"
+                      name="AirportIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[AirportIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[AircraftIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[AircraftIDKey]"
+                      name="AircraftIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[AircraftIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[ReportIDKey]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[ReportIDKey]"
+                      name="ReportIDKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[ReportIDKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Event_ID]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Event_ID]"
+                      name="Event_ID">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Event_ID]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Accident_Number]"
+                      dataType="wstr"
+                      length="50"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Accident_Number]"
+                      name="Accident_Number">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Accident_Number]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Fatal_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Fatal_Injuries]"
+                      name="Total_Fatal_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Fatal_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Serious_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Serious_Injuries]"
+                      name="Total_Serious_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Serious_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Minor_Injuries]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Minor_Injuries]"
+                      name="Total_Minor_Injuries">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Minor_Injuries]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Uninjured]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Total_Uninjured]"
+                      name="Total_Uninjured">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Total_Uninjured]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[damage_Price]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[damage_Price]"
+                      name="damage_Price">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[damage_Price]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Milage]"
+                      dataType="r8"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[Milage]"
+                      name="Milage">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[Milage]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[InsertDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[InsertDate]"
+                      name="InsertDate">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[InsertDate]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[ModifiedDate]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[ModifiedDate]"
+                      name="ModifiedDate">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[ModifiedDate]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_create_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_create_time]"
+                      name="accm_txn_create_time">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[accm_txn_create_time]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[txn_process_time_hours]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[txn_process_time_hours]"
+                      name="txn_process_time_hours">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input].Columns[txn_process_time_hours]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\OLE DB Command"
+              componentClassID="Microsoft.OLEDBCommand"
+              contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+              description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+              name="OLE DB Command"
+              usesDispositions="true"
+              version="2">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">exec dbo.UpdateFactAccident  ?,?,?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transform And Load Data\OLE DB Command.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[MSI\MSSQLSERVER_DWBI.Airline_Accidents_DW]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input]"
+                  errorOrTruncationOperation="Command Execution"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Command Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].Columns[fact_table_natural_key (txn_id)]"
+                      cachedDataType="i4"
+                      cachedName="fact_table_natural_key (txn_id)"
+                      cachedSortKeyPosition="1"
+                      externalMetadataColumnId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@AccidentID]"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[fact_table_natural_key (txn_id)]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].Columns[accm_txn_complete_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_complete_time"
+                      externalMetadataColumnId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@accm_txn_complete_time]"
+                      lineageId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output].Columns[accm_txn_complete_time]" />
+                    <inputColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].Columns[txn_process_time_hours]"
+                      cachedDataType="i4"
+                      cachedName="txn_process_time_hours"
+                      externalMetadataColumnId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@txn_process_time_hours]"
+                      lineageId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Output].Columns[txn_process_time_hours]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@AccidentID]"
+                      dataType="i4"
+                      name="@AccidentID">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      name="@accm_txn_complete_time">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">65</property>
+                      </properties>
+                    </externalMetadataColumn>
+                    <externalMetadataColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input].ExternalColumns[@txn_process_time_hours]"
+                      dataType="i4"
+                      name="@txn_process_time_hours">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                          name="DBParamInfoFlags">81</property>
+                      </properties>
+                    </externalMetadataColumn>
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Output]"
+                  exclusionGroup="1"
+                  name="OLE DB Command Output"
+                  synchronousInputId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Command Error Output"
+                  synchronousInputId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\OLE DB Command.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transform And Load Data\Time Sort"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+              name="Time Sort"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the maximum number of threads to use for sorting."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\Transform And Load Data\Time Sort.Inputs[Sort Input]"
+                  name="Sort Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Time Sort.Inputs[Sort Input].Columns[fact_table_natural_key (txn_id) ]"
+                      cachedDataType="i4"
+                      cachedName="fact_table_natural_key (txn_id) "
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[fact_table_natural_key (txn_id) ]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\Transform And Load Data\Time Sort.Inputs[Sort Input].Columns[accm_txn_complete_time]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="accm_txn_complete_time"
+                      lineageId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output]"
+                  isSorted="true"
+                  name="Sort Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[fact_table_natural_key (txn_id) ]"
+                      dataType="i4"
+                      lineageId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[fact_table_natural_key (txn_id) ]"
+                      name="fact_table_natural_key (txn_id) "
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[fact_table_natural_key (txn_id) ]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[accm_txn_complete_time]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output].Columns[accm_txn_complete_time]"
+                      name="accm_txn_complete_time">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output].Columns[accm_txn_complete_time]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transform And Load Data.Paths[Derived Column Output]"
+              endId="Package\Transform And Load Data\OLE DB Command.Inputs[OLE DB Command Input]"
+              name="Derived Column Output"
+              startId="Package\Transform And Load Data\Derived Column.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Transform And Load Data.Paths[Merge Join Output]"
+              endId="Package\Transform And Load Data\Derived Column.Inputs[Derived Column Input]"
+              name="Merge Join Output"
+              startId="Package\Transform And Load Data\Merge Join.Outputs[Merge Join Output]" />
+            <path
+              refId="Package\Transform And Load Data.Paths[OLE DB Source Output]"
+              endId="Package\Transform And Load Data\Time Sort.Inputs[Sort Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transform And Load Data\Extract from Time.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Transform And Load Data.Paths[OLE DB Source Output1]"
+              endId="Package\Transform And Load Data\FactAccident Sort.Inputs[Sort Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transform And Load Data\Extract from factAccident.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\Transform And Load Data.Paths[Sort Output]"
+              endId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Left Input]"
+              name="Sort Output"
+              startId="Package\Transform And Load Data\Time Sort.Outputs[Sort Output]" />
+            <path
+              refId="Package\Transform And Load Data.Paths[Sort Output1]"
+              endId="Package\Transform And Load Data\Merge Join.Inputs[Merge Join Right Input]"
+              name="Sort Output"
+              startId="Package\Transform And Load Data\FactAccident Sort.Outputs[Sort Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{54992BB6-0CFD-4DD9-BACB-4C095CC21D44}"
+      DTS:From="Package\Extract Time data to Staging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Transform And Load Data" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{973A7F01-1C8C-4256-9634-764B4DE479C4}"
+      DTS:EventID="0"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{93B3A116-C1E5-412A-8D8F-29C382B93117}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables />
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="212.8,41.6"
+          Id="Package\Extract Time data to Staging"
+          TopLeft="312.857148185068,38.2352946538827" />
+        <NodeLayout
+          Size="200,41.6"
+          Id="Package\Transform And Load Data"
+          TopLeft="321.428576902468,250.82353292947" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="420.342862543768,79.8352946538827">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,170.988238275587"
+              Start="0,0"
+              End="0,163.488238275587">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,163.488238275587" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Extract Time data to Staging">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Extract Time data to Staging\OLE DB Destination"
+          TopLeft="477.857150995002,107.823530923949" />
+        <NodeLayout
+          Size="150.4,41.6"
+          Id="Package\Extract Time data to Staging\Flat File Source"
+          TopLeft="210.000003576279,105.529413244716" />
+        <EdgeLayout
+          Id="Package\Extract Time data to Staging.Paths[Flat File Source Output]"
+          TopLeft="360.400003576279,127.476472084333">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="117.457147418723,0"
+              Start="0,0"
+              End="109.957147418723,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="109.957147418723,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <DtsEventHandler
+    design-time-name="Package\Extract Time data to Staging.EventHandlers[OnPreExecute]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\Extract Time data to Staging.EventHandlers[OnPreExecute]\Truncate Time"
+          TopLeft="463.909090909091,115.090909090909" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract Time data to Staging\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Transform And Load Data">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="163.2,41.6"
+          Id="Package\Transform And Load Data\Extract from Time"
+          TopLeft="115,51" />
+        <NodeLayout
+          Size="196.8,41.6"
+          Id="Package\Transform And Load Data\Extract from factAccident"
+          TopLeft="124,236" />
+        <NodeLayout
+          Size="129.6,41.6"
+          Id="Package\Transform And Load Data\Merge Join"
+          TopLeft="711,137" />
+        <NodeLayout
+          Size="124,41.6"
+          Id="Package\Transform And Load Data\Time Sort"
+          TopLeft="459,51" />
+        <NodeLayout
+          Size="164.8,41.6"
+          Id="Package\Transform And Load Data\OLE DB Command"
+          TopLeft="945,268" />
+        <NodeLayout
+          Size="152.8,41.6"
+          Id="Package\Transform And Load Data\Derived Column"
+          TopLeft="956,141" />
+        <NodeLayout
+          Size="160,41.6"
+          Id="Package\Transform And Load Data\FactAccident Sort"
+          TopLeft="460,236" />
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[Sort Output1]"
+          TopLeft="540,236">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="235.8,-57.4000000000001"
+              Start="0,0"
+              End="235.8,-49.9000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,-24.7" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,-24.7"
+                    Point2="0,-28.7"
+                    Point3="4,-28.7" />
+                  <mssgle:LineSegment
+                    End="231.8,-28.7" />
+                  <mssgle:CubicBezierSegment
+                    Point1="231.8,-28.7"
+                    Point2="235.8,-28.7"
+                    Point3="235.8,-32.7" />
+                  <mssgle:LineSegment
+                    End="235.8,-49.9000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[Sort Output]"
+          TopLeft="521,92.6">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="254.8,44.4"
+              Start="0,0"
+              End="254.8,36.9">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.2" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18.2"
+                    Point2="0,22.2"
+                    Point3="4,22.2" />
+                  <mssgle:LineSegment
+                    End="250.8,22.2" />
+                  <mssgle:CubicBezierSegment
+                    Point1="250.8,22.2"
+                    Point2="254.8,22.2"
+                    Point3="254.8,26.2" />
+                  <mssgle:LineSegment
+                    End="254.8,36.9" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[OLE DB Source Output1]"
+          TopLeft="320.8,256.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="139.2,0"
+              Start="0,0"
+              End="131.7,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="131.7,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[OLE DB Source Output]"
+          TopLeft="278.2,71.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="180.8,0"
+              Start="0,0"
+              End="173.3,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="173.3,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[Merge Join Output]"
+          TopLeft="840.6,159.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="115.4,0"
+              Start="0,0"
+              End="107.9,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="107.9,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Transform And Load Data.Paths[Derived Column Output]"
+          TopLeft="1029.9,182.6">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,85.4"
+              Start="0,0"
+              End="0,77.9">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,77.9" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transform And Load Data\Extract from Time">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transform And Load Data\Extract from factAccident">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

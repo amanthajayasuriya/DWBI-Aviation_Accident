@@ -1,0 +1,42 @@
+=TEXT(RAND()*("2022-5-8 12:00:00"-"2022-5-13 9:00")+"2022-5-13 9:00:00","YYYY-MM-DD HH:MM:SS")
+
+=TEXT(RAND()*("2004-1-1 "-"2021-12-31 ")+"2021-12-31 ","YYYY-MM-DD ")
+==========================================================
+
+
+DATEDIFF("hh",accm_txn_create_time,accm_txn_complete_time)
+
+
+
+=========================================================
+
+
+
+CREATE PROCEDURE dbo.UpdateFactSales
+@OrderItemId int,
+@accm_txn_complete_time datetime,
+@txn_process_time_hours int
+AS
+BEGIN
+if not exists (select OrderItemId
+from dbo.FactSales
+where OrderItemId = @OrderItemId)
+BEGIN
+insert into dbo.FactSales
+(OrderItemId,accm_txn_complete_time,txn_process_time_hours)
+values
+(@OrderItemId,
+@accm_txn_complete_time,
+@txn_process_time_hours)
+END;
+if exists (select OrderItemId
+from dbo.FactSales
+where OrderItemId = @OrderItemId)
+BEGIN
+update dbo.FactSales
+set
+accm_txn_complete_time=@accm_txn_complete_time,
+txn_process_time_hours=@txn_process_time_hours
+where OrderItemId = @OrderItemId
+END;
+END;
